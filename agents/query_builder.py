@@ -32,20 +32,33 @@ def query_builder(parser_profile: ParsedProfile):
 
     # Checking each trial in retrieved content and adding required and important trial content into the list
     for trial in response_json["studies"]:
-        nct_id = trial["protocolSection"]["identificationModule"].get("nctId")
-        study_overview = (trial["protocolSection"]["identificationModule"].get("briefTitle") +
-                          trial["protocolSection"]["identificationModule"].get("officialTitle"))
+        nct_id = trial["protocolSection"].get("identificationModule", {}).get("nctId", "")
+        study_overview = (trial["protocolSection"].get("identificationModule", {}).get("briefTitle", "") + "," +
+                          trial["protocolSection"].get("identificationModule", {}).get("officialTitle", ""))
 
-        status = trial["protocolSection"]["statusModule"].get("overallStatus")
-        participation_criteria = (trial["protocolSection"]["eligibilityModule"].get("eligibilityCriteria") +
-                                         trial["protocolSection"]["eligibilityModule"].get("sex") +
-                                         trial["protocolSection"]["eligibilityModule"].get("minimumAge")+
-                                         ",".join(trial["protocolSection"]["eligibilityModule"].get("stdAges", []))
+        status = trial["protocolSection"].get("statusModule", {}).get("overallStatus", "")
+        participation_criteria = (trial["protocolSection"].get("eligibilityModule", {}).get("eligibilityCriteria", "") +
+                                         trial["protocolSection"].get("eligibilityModule", {}).get("sex", "") +
+                                         trial["protocolSection"].get("eligibilityModule", {}).get("minimumAge", "")+
+                                         ",".join(trial["protocolSection"].get("eligibilityModule", {}).get("stdAges", []))
                                          )
-        contacts_and_locations = "".join(trial["protocolSection"]["contactsLocationsModule"])
-        study_plan = (",".join(trial["protocolSection"]["designModule"].get("phases", [])) +
-                             trial["protocolSection"]["descriptionModule"].get("detailedDescription"))
+        contacts_and_locations = []
+        locations_list_of_dicts = trial["protocolSection"].get("contactsLocationsModule", {}).get("locations", [])
+        for location in locations_list_of_dicts:
+            facility = location.get("facility", "")
+            city = location.get("city", "")
+            state = location.get("state", "")
+            zip_code = location.get("zip", "")
+            country = location.get("country", "")
+            contact_and_location = f"{facility}, {city}, {state}, {zip_code}, {country}"
+            contacts_and_locations.append(contact_and_location)
 
+        contacts_and_locations = ";".join(contacts_and_locations)
+
+        study_plan = (",".join(trial["protocolSection"].get("designModule", {}).get("phases", [])) +
+                             trial["protocolSection"].get("descriptionModule", {}).get("detailedDescription", ""))
+
+        # Trial Candidate object add to the list of trial candidates
         trial_candidate = TrialCandidate(
             nct_id = nct_id,
             study_overview=study_overview,
