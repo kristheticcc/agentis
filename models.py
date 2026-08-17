@@ -11,15 +11,15 @@ class ParsedProfile(BaseModel):
                                        "such as lifespan, quality of life, and health risks.")
     cancer_stage: str | None=None
     diagnosis_status: str | None=None
-    current_treatments: list[str] | None=None
-    prior_treatments: list[str] | None=None
-    prior_surgery: bool | None=None
-    prior_radiation: bool | None=None
-    prior_immunotherapy: bool | None=None
-    prior_stem_cell_transplant: bool | None=None
+    current_treatments: list[str] | None = Field(description="If no mention of current treatments, then None. If patient has no current treatments mentioned explicitly, then []")
+    prior_treatments: list[str] | None = Field(description="If no mention of prior treatments, then None. If patient has no prior treatments mentioned explicitly, then []")
+    prior_surgery: bool | None = Field(description="If no mention of prior surgery, then None. If mentioned no surgery explicitly, then False")
+    prior_radiation: bool | None = Field(description="If no mention of prior radiation, then None. If mentioned no radiation treatment explicitly, then False")
+    prior_immunotherapy: bool | None = Field(description="If no mention of prior immunotherapy, then None. If mentioned no immunotherapy explicitly, then False")
+    prior_stem_cell_transplant: bool | None = Field(description="If no mention of prior stem cell transplant, then None. If mentioned no prior stem cell transplant explicitly, then False")
     performance_status: str | None=None
     organ_function: str | None=None
-    allergies: list[str] | None=None
+    allergies: list[str] | None= Field(description="If no mention of allergies, then None. If patient has no allergies mentioned explicitly, then []")
     location: str | None = Field(description="A place where a research site for a clinical study can be found. Location/"
                                              " information can be searched using a facility name, a city, state, /"
                                              "zip code, or country. A location where a study is being conducted may /"
@@ -51,7 +51,7 @@ class EligibilityResult(BaseModel):
 class RankedTrial(BaseModel):
     rank: int
     eligibility_result: EligibilityResult
-    ranking_reasoning: str = Field("Why this trial is ranked where it is relative to others.")
+    ranking_reasoning: str = Field(description="Why this trial is ranked where it is relative to others.")
 
 
 # Pydantic model for Ranker and explainer -> FastAPI render
