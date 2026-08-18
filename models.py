@@ -1,6 +1,10 @@
 # Imports
 from pydantic import BaseModel, Field
 
+# Pydantic model for user message
+class PatientRequest(BaseModel):
+    message: str
+
 # Pydantic model for Profile parser -> Query builder
 class ParsedProfile(BaseModel):
     name: str | None = Field(description="Name of the patient.", default=None)

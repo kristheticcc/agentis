@@ -3,27 +3,39 @@ from agents.profile_parser import profile_parser
 from agents.query_builder import query_builder
 from agents.eligibility_checker import eligibility_checker
 from agents.ranker_and_explainer import ranker_and_explainer
+from models import PatientRequest
 import asyncio
 
+# Function for calling entire pipeline: profile parser -> query builder -> eligibility checker -> ranker and explainer
+async def run_pipeline(patient_info: PatientRequest):
+
+    # Extracting structured patient info from patient information
+    print("Parsing patient profile...")
+    profile_parsed = profile_parser(patient_info.message)
+
+    # Querying clinical trials from clinical.trials.gov
+    print("Extracting clinical trials...")
+    trials_received = query_builder(profile_parsed)
+
+    # Eligibility list containing eligibility results for each trial
+    print("Checking for eligibility...")
+    eligibility_list = await eligibility_checker(profile_parsed, trials_received)
+
+    # Ranking and filtering trials for which patient is eligible
+    print("Ranking and explaining trials...")
+    ranked_and_explained = ranker_and_explainer(eligibility_list)
+
+    # Returning ranked and trials (summarized)
+    return ranked_and_explained
+
 def main():
-    print("Hello from agentis!")
-    patient_info = "58 year old male with newly diagnosed multiple myeloma, currently taking bortezomib and dexamethasone, no prior stem cell transplant, no prior radiation, good kidney function."
-    print("------------------ PATIENT INFO ------------------------------")
-    print(patient_info)
-
-    profile_parser_output = profile_parser(patient_info)
-    print("------------------- PARSED PROFILE -----------------------")
-    print(profile_parser_output)
-
-    print("--------------------- QUERY BUILDER OP/ TRIAL CANDIDATES-----------------------------")
-    query_builder_output = query_builder(profile_parser_output)
-    print(query_builder_output)
-    print("--------------------- Eligibility Results -----------------------------")
-    eligibility_outputs = asyncio.run(eligibility_checker(profile=profile_parser_output, trial_candidates=query_builder_output))
-    print(eligibility_outputs)
-    print("--------------------- RANKER AND EXPLAINER Results -----------------------------")
-    ranked_outputs = ranker_and_explainer(eligibility_outputs)
-    print(ranked_outputs)
+    message = """
+    48 year old female with stage 3 ovarian cancer, currently taking carboplatin and paclitaxel, 
+    no prior surgeries, no prior radiation, no known allergies, ECOG performance status 1.
+    """
+    patient_request = PatientRequest(message=message)
+    example_results = run_pipeline(patient_request)
+    print(example_results)
 
 
 if __name__ == "__main__":

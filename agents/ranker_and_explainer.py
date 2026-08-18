@@ -31,7 +31,7 @@ def ranker_and_explainer(selected_trials: list[EligibilityResult]):
 
     for ranked_trial in ranked.results:
         original = trials_by_id.get(ranked_trial.nct_id)
-        if not original:
+        if original:
             ranked_trial.contacts_and_locations = original.contacts_and_locations
 
     return ranked
