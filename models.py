@@ -50,9 +50,11 @@ class EligibilityResult(BaseModel):
 # Pydantic model for individual EligibilityResult result summarized
 class RankedTrial(BaseModel):
     rank: int
-    eligibility_result: EligibilityResult
+    title: str = Field(description="Official title of study", default="")
+    study_info: str = Field(description="Concise summary of the trial")
     ranking_reasoning: str = Field(description="Why this trial is ranked where it is relative to others.")
-
+    nct_id: str
+    contacts_and_locations: str
 
 # Pydantic model for Ranker and explainer -> FastAPI render
 class RankedOutput(BaseModel):

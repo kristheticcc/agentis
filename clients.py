@@ -10,7 +10,7 @@ groq_api_key = os.getenv("GROQ_API_KEY")
 
 # Models
 gpt_model = "o4-mini"
-groq_model = "llama3.3"
+groq_model = "openai/gpt-oss-120b"
 
 # Clients
 openai = OpenAI()

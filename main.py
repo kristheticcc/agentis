@@ -2,6 +2,7 @@
 from agents.profile_parser import profile_parser
 from agents.query_builder import query_builder
 from agents.eligibility_checker import eligibility_checker
+from agents.ranker_and_explainer import ranker_and_explainer
 import asyncio
 
 def main():
@@ -20,7 +21,9 @@ def main():
     print("--------------------- Eligibility Results -----------------------------")
     eligibility_outputs = asyncio.run(eligibility_checker(profile=profile_parser_output, trial_candidates=query_builder_output))
     print(eligibility_outputs)
-
+    print("--------------------- RANKER AND EXPLAINER Results -----------------------------")
+    ranked_outputs = ranker_and_explainer(eligibility_outputs)
+    print(ranked_outputs)
 
 
 if __name__ == "__main__":
