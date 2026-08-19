@@ -1,3 +1,4 @@
+# FastAPI backend for local use (NOT web version)
 # Imports
 from fastapi import FastAPI
 from models import PatientRequest, RankedOutput
