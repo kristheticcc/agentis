@@ -9,7 +9,7 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 groq_api_key = os.getenv("GROQ_API_KEY")
 
 # Models
-gpt_model = "o4-mini"
+gpt_model = "gpt-5-mini"                            # replaced o4-mini after the model was deprecated
 groq_model = "openai/gpt-oss-120b"
 
 # Clients
