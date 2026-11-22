@@ -46,7 +46,7 @@ Takes the eligible/uncertain trials, ranks them (favoring active recruitment sta
 ## Tech Stack
 
 - **Backend:** FastAPI
-- **Models:** OpenAI (`o4-mini`) for the two reasoning-heavy stages (Profile Parser, Eligibility Checker); an open-source model (GPT-OSS-120B)via Groq for the lighter stage (Query Builder has no LLM call; Ranker uses the open source model since its job is summarizing/ordering already-correct data)
+- **Models:** OpenAI (`gpt-6.1-terra`) for the two reasoning-heavy stages (Profile Parser, Eligibility Checker); an open-source model (GPT-OSS-120B)via Groq for the lighter stage (Query Builder has no LLM call; Ranker uses the open source model since its job is summarizing/ordering already-correct data)
 - **Data source:** [ClinicalTrials.gov API v2](https://clinicaltrials.gov/data-api/api)
 - **Frontend:** Jinja2 templates (Note: Frontend code for this project was generated using Codex)
 - **Package management:** uv
